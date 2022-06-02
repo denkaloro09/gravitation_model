@@ -7,8 +7,24 @@ class Storage:
     def simulate_moving(self):
         for planet in self.storage:
             list_of_planets = [x for x in self.storage if x != planet]
-            planet.move(list_of_planets)
+            if not planet.is_clicked():
+                planet.move(list_of_planets)
 
     def draw(self, main_surface, track_surface):
         for planet in self.storage:
             planet.draw(main_surface, track_surface)
+
+    def move_by_mouse(self, rel):
+        for planet in self.storage:
+            if planet.is_clicked():
+                planet.move_by_mouse(rel)
+
+    def is_planets_collide_point(self, pos):
+        for planet in self.storage:
+            if planet.is_clicked_by_mouse(pos):
+                return True
+        return False
+
+    def cancel_planet_clicks(self):
+        for planet in self.storage:
+            planet.not_clicked()

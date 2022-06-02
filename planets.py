@@ -12,10 +12,11 @@ class Planet:
         self.main_clr = clr
         self.track_clr = (clr[0] // 2, clr[1] // 2, clr[2] // 2)
         self.stay = state
+        self.clicked = False
 
     def draw(self, main_surface, track_surface):
-        pygame.draw.circle(track_surface, self.track_clr, (self.pos.x, self.pos.y), self.pos.w / 4)
-        pygame.draw.circle(main_surface, self.main_clr, (self.pos.x, self.pos.y), self.pos.w )
+        pygame.draw.circle(track_surface, self.track_clr, (self.pos.x, self.pos.y), self.pos.w / 5)
+        pygame.draw.circle(main_surface, self.main_clr, (self.pos.x, self.pos.y), self.pos.w / 2)
 
     def move(self, list_of_planets):
         if not self.stay:
@@ -29,8 +30,24 @@ class Planet:
             self.pos.x += self.vector.x
             self.pos.y += self.vector.y
 
+    def move_by_mouse(self, rel):
+        self.pos.move_ip(rel)
+
     def find_distance(self, plt):
         return round(math.sqrt((self.pos.x - plt.pos.x)**2 + (self.pos.y - plt.pos.y)**2))
+
+    def is_clicked_by_mouse(self, pos):
+        if (pos[0] - self.pos.x)**2 + (pos[1] - self.pos.y)**2 <= (self.pos.w/2)**2:
+            self.clicked = True
+        else:
+            self.clicked = False
+        return self.clicked
+
+    def is_clicked(self):
+        return self.clicked
+
+    def not_clicked(self):
+        self.clicked = False
 
 
 class Vector:
@@ -53,4 +70,3 @@ class Vector:
         mb = math.sqrt(v.x**2 + v.y**2)
         sc = self.x * v.x + self.y * v.y
         return sc/(ma * mb)
-
