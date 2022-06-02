@@ -9,6 +9,7 @@ class Storage:
             list_of_planets = [x for x in self.storage if x != planet]
             if not planet.is_clicked():
                 planet.move(list_of_planets)
+        self.reset_processing()
 
     def draw(self, main_surface, track_surface):
         for planet in self.storage:
@@ -27,4 +28,12 @@ class Storage:
 
     def cancel_planet_clicks(self):
         for planet in self.storage:
-            planet.not_clicked()
+            if planet.is_clicked():
+                planet.not_clicked()
+
+    def reset_processing(self):
+        for planet in self.storage:
+            planet.processed = False
+
+    def count(self):
+        return len(self.storage)
