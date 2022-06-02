@@ -5,25 +5,29 @@ G = 1
 
 
 class Planet:
-    def __init__(self, x, y, clr, m, r, vx, vy):
+    def __init__(self, x, y, clr, m, r, vx, vy, state):
         self.pos = pygame.Rect(x, y, 2*r, 2*r)
         self.mass = m
         self.vector = Vector(vx, vy)
-        self.clr = clr
+        self.main_clr = clr
+        self.track_clr = (clr[0] // 2, clr[1] // 2, clr[2] // 2)
+        self.stay = state
 
-    def draw(self, surface):
-        pygame.draw.circle(surface, self.clr, (self.pos.x, self.pos.y), self.pos.w/2)
+    def draw(self, main_surface, track_surface):
+        pygame.draw.circle(track_surface, self.track_clr, (self.pos.x, self.pos.y), self.pos.w / 4)
+        pygame.draw.circle(main_surface, self.main_clr, (self.pos.x, self.pos.y), self.pos.w )
 
     def move(self, list_of_planets):
-        for plt in list_of_planets:
-            if not(plt is None):
-                r = self.find_distance(plt)
-                a = G*plt.mass/(r**2)
-                d_x = (a / r) * (plt.pos.x - self.pos.x)
-                d_y = (a / r) * (plt.pos.y - self.pos.y)
-                self.vector.sum_vector(d_x, d_y)
-        self.pos.x += self.vector.x
-        self.pos.y += self.vector.y
+        if not self.stay:
+            for plt in list_of_planets:
+                if not(plt is None):
+                    r = self.find_distance(plt)
+                    a = G*plt.mass/(r**2)
+                    d_x = (a / r) * (plt.pos.x - self.pos.x)
+                    d_y = (a / r) * (plt.pos.y - self.pos.y)
+                    self.vector.sum_vector(d_x, d_y)
+            self.pos.x += self.vector.x
+            self.pos.y += self.vector.y
 
     def find_distance(self, plt):
         return round(math.sqrt((self.pos.x - plt.pos.x)**2 + (self.pos.y - plt.pos.y)**2))
