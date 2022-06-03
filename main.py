@@ -63,14 +63,6 @@ while flRunning:
             stg.draw(sc, plt_sc)
         else:
             stg.cancel_planet_clicks()
-    elif pressed[0]:
-        paused = True
-        rel = pygame.mouse.get_rel()
-        stg.move_system_position(rel)
-        plt_sc.fill(BLACK)
-        stg.draw(sc, plt_sc)
-    else:
-        paused = False
 
     count_sc = font.render(f'{stg.count()}', True, WHITE)
     sc.fill(BLACK)
