@@ -25,7 +25,7 @@ class Planet:
     def move(self, list_of_planets):
         if not self.stay:  # если планета не закреплена
             for plt in list_of_planets:
-                if not (plt is None) and not plt.processed:
+                if not (plt is None) and not plt.processed and id(plt) != id(self):
                     r = self.find_distance(plt)
                     if r != 0:
                         # изменение положения искомой планеты

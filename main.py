@@ -32,12 +32,13 @@ counter_pos = count_sc.get_rect(center=(W-30, 30))
 
 # хранилище планет
 stg = planet_storage.Storage()
-stg.add_obj(planets.Planet(W // 2, 70, GREEN, 1000, 10, (11, 0), False))
-stg.add_obj(planets.Planet(W // 2, 200, RED, 2000, 17, (15, 0), False))
+stg.add_obj(planets.Planet(W // 2, 70, GREEN, 1000, 10, (-11, 0), False))
+stg.add_obj(planets.Planet(W // 2, 200, RED, 2000, 17, (-15, 0), False))
 stg.add_obj(planets.Planet(W // 2, H // 2, YELLOW, 35000, 30, (0, 0), True))
 
 
-# кнопки управления
+# управление
+paused = False
 trace_btn = button.Button('Clean trace', (W-100, 60), WHITE)
 
 flRunning = True
@@ -52,7 +53,7 @@ while flRunning:
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
             rel = pygame.mouse.get_rel()
             rand_clr = (randint(0, 255), randint(0, 255), randint(0, 255))
-            stg.add_obj(planets.Planet(event.pos[0], event.pos[1], rand_clr, 100, 5, (rel[0]//5, rel[1]//5), False))
+            stg.add_obj(planets.Planet(event.pos[0], event.pos[1], rand_clr, 10000, 5, (rel[0]//5, rel[1]//5), False))
 
     pressed = pygame.mouse.get_pressed()
     if stg.is_planets_collide_point(pygame.mouse.get_pos()):
@@ -62,15 +63,24 @@ while flRunning:
             stg.draw(sc, plt_sc)
         else:
             stg.cancel_planet_clicks()
+    elif pressed[0]:
+        paused = True
+        rel = pygame.mouse.get_rel()
+        stg.move_system_position(rel)
+        plt_sc.fill(BLACK)
+        stg.draw(sc, plt_sc)
+    else:
+        paused = False
 
     count_sc = font.render(f'{stg.count()}', True, WHITE)
-
     sc.fill(BLACK)
 
-    stg.simulate_moving()
+    if not paused:
+        stg.simulate_moving()
     sc.blit(plt_sc, (0, 0))
     sc.blit(count_sc, counter_pos)
     trace_btn.blit_bt(sc)
     stg.draw(sc, plt_sc)
     pygame.display.update()
     clock.tick(FPS)
+
